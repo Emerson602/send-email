@@ -34,6 +34,7 @@ app.post('/send-email', (req, res) => {
     const mailOptionsToSelf = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
+      cc: process.env.EMAIL_CC,
       replyTo: email,
       subject: 'Nova message do formulário de contato',
       text: `Nome: ${name}\ntelefone: ${phone}\nmensagem: ${message}`,
