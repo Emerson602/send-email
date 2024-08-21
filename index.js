@@ -20,32 +20,32 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify(function(error, success) {
   if (error) {
-    console.error('Erro na configuração SMTP:', error);
+    console.error('Error:', error);
   } else {
-    console.log('Servidor SMTP pronto para enviar e-mails');
+    console.log('Server ready to send emails');
   }
 });
 
 app.post('/send-email', (req, res) => {
     const { email, name, phone, message } = req.body;
   
-    console.log('Dados recebidos:', { email, name, phone, message });   
+    console.log('Data received:', { email, name, phone, message });   
   
     const mailOptionsToSelf = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER, 
       cc: process.env.EMAIL_CC,     
       replyTo: email,
-      subject: 'Nova message do formulário de contato',
-      text: `Nome: ${name}\ntelefone: ${phone}\nmensagem: ${message}`     
+      subject: 'New contact form message',
+      text: `Name: ${name}\nTelephone: ${phone}\nMessage: ${message}`     
     }; 
 
     transporter.sendMail(mailOptionsToSelf, (error, info) => {
       if (error) {
-        console.error('Erro ao enviar email para você:', error);
-        return res.status(500).json({ error: error.message });
+        console.error('Error sending email:', error);
+        return res.status(500).json({ error: error.message });  
       }
-      console.log('Email enviado para você (e cópia para o usuário):', info.response); 
+      console.log('Email sent to you:', info.response); 
     
       const mailOptionsToUser = { 
         from: process.env.EMAIL_USER,
@@ -56,16 +56,16 @@ app.post('/send-email', (req, res) => {
 
       transporter.sendMail(mailOptionsToUser, (error, info) => {
         if (error) {
-          console.error('Erro ao enviar email de confirmação:', error);
+          console.error('Error sending confirmation email:', error);
           return res.status(500).json({ error: error.message });
         }
-        console.log('Email de confirmação enviado:', info.response);
-        res.status(200).json({ message: 'Emails enviados com sucesso!' });
+        console.log('Confirmation email sent:', info.response);
+        res.status(200).json({ message: 'Emails sent successfully!' });
       });
     });
   });
 
 const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
